@@ -9,15 +9,13 @@ import bson.json_util
 from datetime import datetime
 from datetime import timedelta
 
+
 # 默认localhost 27017
 client = MongoClient()
 # 选择 test_tbl db
 db = client['test_tbl']
 # 选择 tbl_report_raw_test 集合
 collection = db['tbl_report_raw_test']
-
-# 测试连接
-pprint.pprint(collection.find_one())
 
 # 辅助函数
 def random_object_id():
@@ -57,8 +55,13 @@ def tbl_report_raw_random_data_list(n=100000):
 	return data_list
 
 def tbl_report_raw_add_random_data(n=100000):
+	start = datetime.utcnow()
+	print "开始时间： " + str(start)
 	collection.insert(tbl_report_raw_random_data_list(n))
+	end = datetime.utcnow()
+	print "结束时间： " + str(end)
+	print "用时： " + str(end - start)
 
-# 插入10万条数据 ~45s
+# 插入10万条数据 ~1min
 # 插入50万条数据 ~5min
-tbl_report_raw_add_random_data(n=500000)
+tbl_report_raw_add_random_data(n=100000)
