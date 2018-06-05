@@ -5,7 +5,8 @@ import pprint
 import random
 from pymongo import MongoClient
 from bson.objectid import ObjectId
-import bson.json_util
+import sys
+import getopt
 from datetime import datetime
 from datetime import timedelta
 
@@ -21,6 +22,9 @@ collection = db['tbl_report_raw_test']
 def random_object_id():
     from_datetime = datetime.utcnow() + timedelta(days=random.randint(1, 10),hours=random.randint(1, 10),minutes=random.randint(0, 50),weeks=random.randint(1, 10))
     return ObjectId.from_datetime(generation_time=from_datetime)
+
+def print_usage():
+	print "Usage: test.py -n <number_of_inserts>"
 
 # tbl_report_raw 集合 辅助函数
 def tbl_report_raw_random_data():
@@ -56,11 +60,34 @@ def tbl_report_raw_random_data_list(n=100000):
 
 def tbl_report_raw_add_random_data(n=100000):
 	start = datetime.utcnow()
-	print "开始时间： " + str(start)
 	collection.insert(tbl_report_raw_random_data_list(n))
 	end = datetime.utcnow()
+	print "开始时间： " + str(start)
 	print "结束时间： " + str(end)
 	print "插入{num}条数据用时： {time}".format(num=n, time=(end - start))
 
 if __name__ == '__main__':
-	tbl_report_raw_add_random_data(n=10000)
+	num = 10000
+	if len(sys.argv) < 2:
+		print_usage()
+		sys.exit(1)
+	try:
+		opts, args = getopt.getopt(sys.argv[1:], "n:")
+	except getopt.GetoptError:
+		print_usage()
+		sys.exit(1)
+	for opt, arg in opts:
+		if opt == '-n':
+			try:
+				num = int(arg)
+				if num <= 0:
+					print "插入数据数量需要大于零"
+					print_usage()
+					sys.exit(2)
+			except ValueError:
+				print_usage()
+				sys.exit(2)
+		else:
+			print_usage()
+			sys.exit(3)
+	tbl_report_raw_add_random_data(n=num)
