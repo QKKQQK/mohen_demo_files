@@ -19,34 +19,46 @@ collection = db['tbl_report_raw_test']
 # 测试连接
 pprint.pprint(collection.find_one())
 
-def insert():
-	post = {
+# 辅助函数
+def random_object_id():
+    from_datetime = datetime.utcnow() + timedelta(days=random.randint(1, 10),hours=random.randint(1, 10),minutes=random.randint(0, 50),weeks=random.randint(1, 10))
+    return ObjectId.from_datetime(generation_time=from_datetime)
+
+# tbl_report_raw 集合 辅助函数
+def tbl_report_raw_random_data():
+	data = {
 	  "name" : "手写风格",
 	  "flag" : random.randint(0, 1),
-	  "extid" : object_id_from_datetime(),
+	  "extid" : random_object_id(),
 	  "exttype" : random.randint(1, 600),
 	  "type" : random.randint(1, 6) * 10,
 	  "tag" : [],
-	  "klist" : [object_id_from_datetime() for _ in xrange(random.randint(0,3))],
-	  "rlist" : [object_id_from_datetime() for _ in xrange(random.randint(0,3))],
-	  "extlist" : [object_id_from_datetime() for _ in xrange(random.randint(0,3))],
-	  "uid" : object_id_from_datetime(),
+	  "klist" : [random_object_id() for _ in xrange(random.randint(0,3))],
+	  "rlist" : [random_object_id() for _ in xrange(random.randint(0,3))],
+	  "extlist" : [random_object_id() for _ in xrange(random.randint(0,3))],
+	  "uid" : random_object_id(),
 	  "uyear" : random.randint(2000, 2018),
 	  "date" : datetime.utcnow(),
-	  "pid" : object_id_from_datetime(),
-	  "eid" : object_id_from_datetime(),
+	  "pid" : random_object_id(),
+	  "eid" : random_object_id(),
 	  "v1" : random.uniform(10, 90),
 	  "v2" : random.uniform(50, 500),
 	  "v3" : random.uniform(200, 222222),
 	  "cfg" : "测试测试测试测试",
-	  "outid" : object_id_from_datetime(),
+	  "outid" : random_object_id(),
 	  "_tick" : datetime.utcnow()
 	}
-	collection.insert_one(post)
+	return data
 
-def object_id_from_datetime():
-    from_datetime = datetime.utcnow() + timedelta(days=random.randint(1, 10),hours=random.randint(1, 10),minutes=random.randint(0, 50),weeks=random.randint(1, 10))
-    return ObjectId.from_datetime(generation_time=from_datetime)
+def tbl_report_raw_random_data_list(n=100000):
+	data_list = []
+	for _ in xrange(n):
+		data_list.append(tbl_report_raw_random_data())
+	return data_list
 
-for _ in xrange(3000000):
-	insert()
+def tbl_report_raw_add_random_data(n=100000):
+	collection.insert(tbl_report_raw_random_data_list(n))
+
+# 插入10万条数据 ~45s
+# 插入50万条数据 ~5min
+tbl_report_raw_add_random_data(n=500000)
