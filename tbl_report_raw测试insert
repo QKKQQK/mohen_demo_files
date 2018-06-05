@@ -1,0 +1,23 @@
+{
+  "_id" : ObjectId("5a14e76975360af7ab9e861b"),
+  "name" : "手写风格",
+  "flag" : 0,
+  "extid" : ObjectId("000000000000000000000000"),
+  "exttype" : 320,
+  "type" : 30,
+  “tag” : [],
+  "klist" : [ObjectId("5a0ab7dad5cb310b9830ef27"), ObjectId("5a0ab7dad5cb310b9830ef27")],
+  "rlist" : [],
+  "extlist" : [],
+  "uid" : ObjectId("5a0ab7dad5cb310b9830ef27"),
+  "uyear" : 2011,
+  "date" : NumberLong(2017326),
+  "pid" : ObjectId("5a0ab7dad5cb310b9830ef27"),
+  "eid" : ObjectId("5a0ab7dad5cb310b9830ef27"),
+  "v1" : 12351440.0,
+  "v2" : 34665450.0,
+  "v3" : 0.0,
+  "cfg" : "测试测试测试测试",
+  "outid" : ObjectId("5a0ab7dad5cb310b9830ef27"),
+  "_tick" : NumberLong("636571740406570093")
+}
