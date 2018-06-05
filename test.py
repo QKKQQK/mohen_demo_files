@@ -60,8 +60,7 @@ def tbl_report_raw_add_random_data(n=100000):
 	collection.insert(tbl_report_raw_random_data_list(n))
 	end = datetime.utcnow()
 	print "结束时间： " + str(end)
-	print "用时： " + str(end - start)
+	print "插入{num}条数据用时： {time}".format(num=n, time=(end - start))
 
-# 插入10万条数据 ~1min
-# 插入50万条数据 ~5min
-tbl_report_raw_add_random_data(n=100000)
+if __name__ == '__main__':
+	tbl_report_raw_add_random_data(n=10000)
