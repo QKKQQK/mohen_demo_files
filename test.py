@@ -1,5 +1,5 @@
 # encoding: utf-8
-
+from __future__ import division
 import pymongo
 import pprint
 import random
@@ -9,6 +9,7 @@ import sys
 import getopt
 from datetime import datetime
 from datetime import timedelta
+import time
 
 
 # 默认localhost 27017
@@ -60,11 +61,15 @@ def tbl_report_raw_random_data_list(n=100000):
 
 def tbl_report_raw_add_random_data(n=100000):
 	start = datetime.utcnow()
+	start_sec = time.time()
 	collection.insert(tbl_report_raw_random_data_list(n))
 	end = datetime.utcnow()
+	end_sec = time.time()
+	time_ms = (end_sec - start_sec) * 1000
 	print "开始时间： " + str(start)
 	print "结束时间： " + str(end)
 	print "插入{num}条数据用时： {time}".format(num=n, time=(end - start))
+	print "每条数据平均用时： {time_ms}毫秒".format(time_ms=(time_ms / n))
 
 if __name__ == '__main__':
 	num = 10000
