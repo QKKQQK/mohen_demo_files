@@ -62,7 +62,7 @@ def tbl_report_raw_random_data_list(n=100000):
 def tbl_report_raw_add_random_data(n=100000):
 	start = datetime.utcnow()
 	start_sec = time.time()
-	collection.insert(tbl_report_raw_random_data_list(n))
+	collection.insert_many(tbl_report_raw_random_data_list(n))
 	end = datetime.utcnow()
 	end_sec = time.time()
 	time_ms = (end_sec - start_sec) * 1000
