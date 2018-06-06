@@ -17,20 +17,25 @@ client = MongoClient()
 # 选择 test_tbl db
 db = client['test_tbl']
 
-# 辅助函数
+# 随机生成ObjectId
 def random_object_id():
     from_datetime = datetime.utcnow() + timedelta(days=random.randint(1, 10),hours=random.randint(1, 10),minutes=random.randint(0, 50),weeks=random.randint(1, 10))
     return ObjectId.from_datetime(generation_time=from_datetime)
 
+# 打印Usage
 def print_usage():
 	print "Usage: test.py -n <number_of_inserts> -t <tbl_name>"
 
+
+
+# 生成随机数据list
 def random_data_list(func, n=100000):
 	data_list = []
 	for _ in xrange(n):
 		data_list.append(func())
 	return data_list
 
+# 生成随机数据
 def add_random_data(func, n=100000):
 	start = datetime.utcnow()
 	start_sec = time.time()
@@ -43,7 +48,9 @@ def add_random_data(func, n=100000):
 	print "插入{num}条数据用时： {time}".format(num=n, time=(end - start))
 	print "每条数据平均用时： {time_ms}毫秒".format(time_ms=(time_ms / n))
 
-# tbl_report_raw 集合 辅助函数
+
+
+# tbl_report_raw 集合 随机数据生成
 def tbl_report_raw_random_data():
 	data = {
 	  "name" : "手写风格",
@@ -77,9 +84,11 @@ def tbl_report_raw_run_test():
 	general_test_count('type',  {'type' : 50})
 	general_test_count('klist', {'klist' : {'$in': [ObjectId('5b25389d0000000000000000')]}})
 	general_test_count('rlist', {'rlist' : {'$in': [ObjectId("5b6215650000000000000000")]}})
-	
-	
-# 通用测试函数
+
+
+
+
+# 通用测试函数 计数
 def general_test_count(field, query):
 	print "[测试搜索{field}]".format(field=field)
 	print "查询条件： " + str(query)
@@ -90,7 +99,7 @@ def general_test_count(field, query):
 	print "用时： {time_ms}毫秒".format(time_ms=time_ms)
 	print "结果个数: " + str(results)
 	print ""
-
+# 通用测试函数 打印
 def general_test_print(field, query, limit=1000000):
 	print "[测试搜索{field}]".format(field=field)
 	print "查询条件： " + str(query)
@@ -104,6 +113,8 @@ def general_test_print(field, query, limit=1000000):
 	for result in results:
 		print result['_id']
 	print ""
+
+
 
 # main
 if __name__ == '__main__':
