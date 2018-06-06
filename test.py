@@ -79,19 +79,27 @@ def tbl_report_raw_random_data():
 # tbl_report_raw 集合 测试函数
 def tbl_report_raw_run_test():
 	print "###单个条件匹配###"
+	# TODO 测试name
+	# TODO 测试flag
 	general_test_count('extid', {'extid' : ObjectId('5b7702090000000000000000')})
 	general_test_count('exttype', {'exttype' : 355})
 	general_test_count('type',  {'type' : 50})
+	# TODO 测试tag
 	general_test_count('klist', {'klist' : {'$in': [ObjectId('5b25389d0000000000000000')]}})
 	general_test_count('rlist', {'rlist' : {'$in': [ObjectId("5b6215650000000000000000")]}})
+	# TODO 测试extlist
 	general_test_count('uid', {'uid' : ObjectId("5b3d42210000000000000000")})
 	general_test_count('uyear', {'uyear' : {'$gt' : 2016}})
 	# TODO 测试date
 	general_test_count('pid', {'pid' : ObjectId("5b2296760000000000000000")})
 	general_test_count('eid', {'eid' : ObjectId("5b479e3a0000000000000000")})
 	general_test_count('v1', {'v1' : {'$gt' : 55, '$lt' : 60}})
-	general_test_print('v1', {'v1' : {'$gt' : 55, '$lt' : 60}}, 100)
-
+	general_test_count('v2', {'v2' : {'$gt' : 150, '$lt' : 300}})
+	general_test_count('v3', {'v3' : {'$gt' : 200, '$lt' : 100000}})
+	general_test_count('outid', {'outid' : ObjectId("5b574baa0000000000000000")})
+	# TODO 测试_tick
+	print "###多个条件混合匹配###"
+	general_test_print(['uyear', 'v1'], {'uyear' : {'$gt' : 2017}, 'v1' : {'$gt' : 89.9}})
 # 通用测试函数 计数
 def general_test_count(field, query):
 	print "[测试搜索{field}]".format(field=field)
@@ -105,8 +113,8 @@ def general_test_count(field, query):
 	print ""
 
 # 通用测试函数 打印
-def general_test_print(field, query, limit=1000000):
-	print "[测试搜索{field}]".format(field=field)
+def general_test_print(fields, query, limit=1000000):
+	print "[测试搜索{fields}]".format(fields=fields)
 	print "查询条件： " + str(query)
 	print "限制个数: " + str(limit)
 	start = start_sec = time.time()
@@ -114,11 +122,10 @@ def general_test_print(field, query, limit=1000000):
 	end = end_sec = time.time()
 	time_ms = (end_sec - start_sec) * 1000
 	print "用时： {time_ms}毫秒".format(time_ms=time_ms)
-	print "结果_id, {field}: ".format(field=field)
+	print "结果个数： " + str(results.count())
 	for result in results:
-		print "_id: " + str(result['_id']) + \
-			  " " + str(field) + ": " + \
-			  str(result[field])
+		print "_id: " + str(result['_id']) , \
+		({field : result[field] for field in fields})
 	print ""
 
 
