@@ -69,15 +69,34 @@ def tbl_report_raw_random_data():
 	}
 	return data
 
+# tbl_report_raw 集合 测试函数
+def tbl_report_raw_run_test():
+    tbl_report_raw_extid_test()
+
+def tbl_report_raw_extid_test():
+	print "[测试搜索extid]"
+	start = datetime.utcnow()
+	results = collection.find({'extid' : ObjectId('5b7702090000000000000000')}).limit(100)
+	end = datetime.utcnow()
+	print "开始时间： " + str(start)
+	print "结束时间： " + str(end)
+	print "用时： {time}".format(time=(end - start))
+	print "结果_id列表 (limit 100) : "
+	print ([result['_id'] for result in results])
+	print ""
+
+# main
 if __name__ == '__main__':
 	global collection
 	num = 10000
 	func = None
-	if len(sys.argv) < 5:
+	run_test = False
+	insert_data = False
+	if len(sys.argv) < 4:
 		print_usage()
 		sys.exit(1)
 	try:
-		opts, args = getopt.getopt(sys.argv[1:], "n:t:")
+		opts, args = getopt.getopt(sys.argv[1:], "n:f:t")
 	except getopt.GetoptError:
 		print_usage()
 		sys.exit(1)
@@ -89,17 +108,23 @@ if __name__ == '__main__':
 					print "插入数据数量需要大于零"
 					print_usage()
 					sys.exit(2)
+				insert_data = True
 			except ValueError:
 				print_usage()
 				sys.exit(2)
-		elif opt == '-t':
+		elif opt == '-f':
 			if arg == 'raw':
 				func = tbl_report_raw_random_data
 				collection = db['tbl_report_raw_test']
 			else:
 				print_usage()
 				sys.exit(1)
+		elif opt == '-t':
+			run_test = True
 		else:
 			print_usage()
 			sys.exit(3)
-	add_random_data(func, n=num)
+	if insert_data:
+		add_random_data(func, n=num)
+	if run_test:
+		tbl_report_raw_run_test()
