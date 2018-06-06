@@ -71,18 +71,30 @@ def tbl_report_raw_random_data():
 
 # tbl_report_raw 集合 测试函数
 def tbl_report_raw_run_test():
-    tbl_report_raw_extid_test()
+	print ""
+	general_test_count('extid', {'extid' : ObjectId('5b7702090000000000000000')})
+	general_test_count('exttype', {'exttype' : 355})
 
-def tbl_report_raw_extid_test():
-	print "[测试搜索extid]"
-	start = datetime.utcnow()
-	results = collection.find({'extid' : ObjectId('5b7702090000000000000000')}).limit(100)
-	end = datetime.utcnow()
-	print "开始时间： " + str(start)
-	print "结束时间： " + str(end)
-	print "用时： {time}".format(time=(end - start))
-	print "结果_id列表 (limit 100) : "
-	print ([result['_id'] for result in results])
+# 通用测试函数
+def general_test_count(field, query):
+	print "[测试搜索{field}]".format(field=field)
+	start = start_sec = time.time()
+	results = collection.find(query).count()
+	end = end_sec = time.time()
+	time_ms = (end_sec - start_sec) * 1000
+	print "用时： {time_ms}毫秒".format(time_ms=time_ms)
+	print "结果个数: " + str(results)
+	print ""
+
+def general_test_print(field, query, limit=1000000):
+	print "[测试搜索{field}]".format(field=field)
+	start = start_sec = time.time()
+	results = collection.find(query).limit(limit)
+	end = end_sec = time.time()
+	time_ms = (end_sec - start_sec) * 1000
+	print "用时： {time_ms}毫秒".format(time_ms=time_ms)
+	print "结果_id: "
+	print (str(result['_id']) + "\n" for result in results)
 	print ""
 
 # main
