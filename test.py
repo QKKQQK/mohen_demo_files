@@ -71,13 +71,15 @@ def tbl_report_raw_random_data():
 
 # tbl_report_raw 集合 测试函数
 def tbl_report_raw_run_test():
-	print ""
+	print "###单个条件匹配###"
 	general_test_count('extid', {'extid' : ObjectId('5b7702090000000000000000')})
 	general_test_count('exttype', {'exttype' : 355})
+	general_test_count('type',  {'type' : 50})
 
 # 通用测试函数
 def general_test_count(field, query):
 	print "[测试搜索{field}]".format(field=field)
+	print "查询条件： " + str(query)
 	start = start_sec = time.time()
 	results = collection.find(query).count()
 	end = end_sec = time.time()
@@ -88,6 +90,8 @@ def general_test_count(field, query):
 
 def general_test_print(field, query, limit=1000000):
 	print "[测试搜索{field}]".format(field=field)
+	print "查询条件： " + str(query)
+	print "限制个数: " + str(limit)
 	start = start_sec = time.time()
 	results = collection.find(query).limit(limit)
 	end = end_sec = time.time()
