@@ -81,28 +81,29 @@ def tbl_report_raw_run_test():
 	print "###单个条件匹配###"
 	# TODO 测试name
 	# TODO 测试flag
-	general_test_count('extid', {'extid' : ObjectId('5b7702090000000000000000')})
-	general_test_count('exttype', {'exttype' : 355})
-	general_test_count('type',  {'type' : 50})
+	general_test_count({'extid' : ObjectId('5b7702090000000000000000')})
+	general_test_count({'exttype' : 355})
+	general_test_count({'type' : 50})
 	# TODO 测试tag
-	general_test_count('klist', {'klist' : {'$in': [ObjectId('5b25389d0000000000000000')]}})
-	general_test_count('rlist', {'rlist' : {'$in': [ObjectId("5b6215650000000000000000")]}})
+	general_test_count({'klist' : {'$in': [ObjectId('5b25389d0000000000000000')]}})
+	general_test_count({'rlist' : {'$in': [ObjectId("5b6215650000000000000000")]}})
 	# TODO 测试extlist
-	general_test_count('uid', {'uid' : ObjectId("5b3d42210000000000000000")})
-	general_test_count('uyear', {'uyear' : {'$gt' : 2016}})
+	general_test_count({'uid' : ObjectId("5b3d42210000000000000000")})
+	general_test_count({'uyear' : {'$gt' : 2016}})
 	# TODO 测试date
-	general_test_count('pid', {'pid' : ObjectId("5b2296760000000000000000")})
-	general_test_count('eid', {'eid' : ObjectId("5b479e3a0000000000000000")})
-	general_test_count('v1', {'v1' : {'$gt' : 55, '$lt' : 60}})
-	general_test_count('v2', {'v2' : {'$gt' : 150, '$lt' : 300}})
-	general_test_count('v3', {'v3' : {'$gt' : 200, '$lt' : 100000}})
-	general_test_count('outid', {'outid' : ObjectId("5b574baa0000000000000000")})
+	general_test_count({'pid' : ObjectId("5b2296760000000000000000")})
+	general_test_count({'eid' : ObjectId("5b479e3a0000000000000000")})
+	general_test_count({'v1' : {'$gt' : 55, '$lt' : 60}})
+	general_test_count({'v2' : {'$gt' : 150, '$lt' : 300}})
+	general_test_count({'v3' : {'$gt' : 200, '$lt' : 100000}})
+	general_test_count({'outid' : ObjectId("5b574baa0000000000000000")})
 	# TODO 测试_tick
 	print "###多个条件混合匹配###"
 	general_test_print({'uyear' : {'$gt' : 2017}, 'v1' : {'$gt' : 89.9}})
 # 通用测试函数 计数
-def general_test_count(field, query):
-	print "[测试搜索{field}]".format(field=field)
+def general_test_count(query):
+	fields = query.keys()
+	print "[测试搜索{fields}]".format(fields=fields)
 	print "查询条件： " + str(query)
 	start = start_sec = time.time()
 	results = collection.find(query).count()
