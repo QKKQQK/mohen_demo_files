@@ -84,9 +84,13 @@ def tbl_report_raw_run_test():
 	general_test_count('type',  {'type' : 50})
 	general_test_count('klist', {'klist' : {'$in': [ObjectId('5b25389d0000000000000000')]}})
 	general_test_count('rlist', {'rlist' : {'$in': [ObjectId("5b6215650000000000000000")]}})
-
-
-
+	general_test_count('uid', {'uid' : ObjectId("5b3d42210000000000000000")})
+	general_test_count('uyear', {'uyear' : {'$gt' : 2016}})
+	# TODO 测试date
+	general_test_count('pid', {'pid' : ObjectId("5b2296760000000000000000")})
+	general_test_count('eid', {'eid' : ObjectId("5b479e3a0000000000000000")})
+	general_test_count('v1', {'v1' : {'$gt' : 55, '$lt' : 60}})
+	general_test_print('v1', {'v1' : {'$gt' : 55, '$lt' : 60}}, 100)
 
 # 通用测试函数 计数
 def general_test_count(field, query):
@@ -99,6 +103,7 @@ def general_test_count(field, query):
 	print "用时： {time_ms}毫秒".format(time_ms=time_ms)
 	print "结果个数: " + str(results)
 	print ""
+
 # 通用测试函数 打印
 def general_test_print(field, query, limit=1000000):
 	print "[测试搜索{field}]".format(field=field)
@@ -109,11 +114,12 @@ def general_test_print(field, query, limit=1000000):
 	end = end_sec = time.time()
 	time_ms = (end_sec - start_sec) * 1000
 	print "用时： {time_ms}毫秒".format(time_ms=time_ms)
-	print "结果_id: "
+	print "结果_id, {field}: ".format(field=field)
 	for result in results:
-		print result['_id']
+		print "_id: " + str(result['_id']) + \
+			  " " + str(field) + ": " + \
+			  str(result[field])
 	print ""
-
 
 
 # main
