@@ -16,8 +16,6 @@ import time
 client = MongoClient()
 # 选择 test_tbl db
 db = client['test_tbl']
-# 选择 tbl_report_raw_test 集合
-collection = db['tbl_report_raw_test']
 
 # 辅助函数
 def random_object_id():
@@ -25,7 +23,25 @@ def random_object_id():
     return ObjectId.from_datetime(generation_time=from_datetime)
 
 def print_usage():
-	print "Usage: test.py -n <number_of_inserts>"
+	print "Usage: test.py -n <number_of_inserts> -t <tbl_name>"
+
+def random_data_list(func, n=100000):
+	data_list = []
+	for _ in xrange(n):
+		data_list.append(func())
+	return data_list
+
+def add_random_data(func, n=100000):
+	start = datetime.utcnow()
+	start_sec = time.time()
+	collection.insert_many(random_data_list(func, n=n))
+	end = datetime.utcnow()
+	end_sec = time.time()
+	time_ms = (end_sec - start_sec) * 1000
+	print "开始时间： " + str(start)
+	print "结束时间： " + str(end)
+	print "插入{num}条数据用时： {time}".format(num=n, time=(end - start))
+	print "每条数据平均用时： {time_ms}毫秒".format(time_ms=(time_ms / n))
 
 # tbl_report_raw 集合 辅助函数
 def tbl_report_raw_random_data():
@@ -53,31 +69,15 @@ def tbl_report_raw_random_data():
 	}
 	return data
 
-def tbl_report_raw_random_data_list(n=100000):
-	data_list = []
-	for _ in xrange(n):
-		data_list.append(tbl_report_raw_random_data())
-	return data_list
-
-def tbl_report_raw_add_random_data(n=100000):
-	start = datetime.utcnow()
-	start_sec = time.time()
-	collection.insert_many(tbl_report_raw_random_data_list(n))
-	end = datetime.utcnow()
-	end_sec = time.time()
-	time_ms = (end_sec - start_sec) * 1000
-	print "开始时间： " + str(start)
-	print "结束时间： " + str(end)
-	print "插入{num}条数据用时： {time}".format(num=n, time=(end - start))
-	print "每条数据平均用时： {time_ms}毫秒".format(time_ms=(time_ms / n))
-
 if __name__ == '__main__':
+	global collection
 	num = 10000
-	if len(sys.argv) < 2:
+	func = None
+	if len(sys.argv) < 5:
 		print_usage()
 		sys.exit(1)
 	try:
-		opts, args = getopt.getopt(sys.argv[1:], "n:")
+		opts, args = getopt.getopt(sys.argv[1:], "n:t:")
 	except getopt.GetoptError:
 		print_usage()
 		sys.exit(1)
@@ -92,7 +92,14 @@ if __name__ == '__main__':
 			except ValueError:
 				print_usage()
 				sys.exit(2)
+		elif opt == '-t':
+			if arg == 'raw':
+				func = tbl_report_raw_random_data
+				collection = db['tbl_report_raw_test']
+			else:
+				print_usage()
+				sys.exit(1)
 		else:
 			print_usage()
 			sys.exit(3)
-	tbl_report_raw_add_random_data(n=num)
+	add_random_data(func, n=num)
