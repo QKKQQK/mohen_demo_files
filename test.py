@@ -75,7 +75,10 @@ def tbl_report_raw_run_test():
 	general_test_count('extid', {'extid' : ObjectId('5b7702090000000000000000')})
 	general_test_count('exttype', {'exttype' : 355})
 	general_test_count('type',  {'type' : 50})
-
+	general_test_count('klist', {'klist' : {'$in': [ObjectId('5b25389d0000000000000000')]}})
+	general_test_count('rlist', {'rlist' : {'$in': [ObjectId("5b6215650000000000000000")]}})
+	
+	
 # 通用测试函数
 def general_test_count(field, query):
 	print "[测试搜索{field}]".format(field=field)
@@ -98,7 +101,8 @@ def general_test_print(field, query, limit=1000000):
 	time_ms = (end_sec - start_sec) * 1000
 	print "用时： {time_ms}毫秒".format(time_ms=time_ms)
 	print "结果_id: "
-	print (str(result['_id']) + "\n" for result in results)
+	for result in results:
+		print result['_id']
 	print ""
 
 # main
