@@ -17,10 +17,16 @@ client = MongoClient()
 # 选择 test_tbl db
 db = client['test_tbl']
 
-# 随机生成ObjectId
-def random_object_id():
+# 从时间随机生成ObjectId
+def random_object_id_from_datetime():
     from_datetime = datetime.utcnow() + timedelta(days=random.randint(1, 10),hours=random.randint(1, 10),minutes=random.randint(0, 50),weeks=random.randint(1, 10))
     return ObjectId.from_datetime(generation_time=from_datetime)
+
+# 从范围随机生成ObjectId
+def random_object_id_from_randint(n):
+	to_hex = format(random.randint(0, n), 'x')
+	to_hex = to_hex.zfill(24)
+	return ObjectId(to_hex)
 
 # 打印Usage
 def print_usage():
@@ -55,23 +61,23 @@ def tbl_report_raw_random_data():
 	data = {
 	  "name" : "手写风格",
 	  "flag" : random.randint(0, 1),
-	  "extid" : random_object_id(),
+	  "extid" : random_object_id_from_datetime(),
 	  "exttype" : random.randint(1, 600),
 	  "type" : random.randint(1, 6) * 10,
 	  "tag" : [],
-	  "klist" : [random_object_id() for _ in xrange(random.randint(0,3))],
-	  "rlist" : [random_object_id() for _ in xrange(random.randint(0,3))],
-	  "extlist" : [random_object_id() for _ in xrange(random.randint(0,3))],
-	  "uid" : random_object_id(),
+	  "klist" : [random_object_id_from_randint(10000) for _ in xrange(random.randint(0,5))],
+	  "rlist" : [random_object_id_from_randint(100) for _ in xrange(random.randint(0,7))],
+	  "extlist" : [random_object_id_from_randint(10000) for _ in xrange(random.randint(0,10))],
+	  "uid" : random_object_id_from_datetime(),
 	  "uyear" : random.randint(2000, 2018),
 	  "date" : datetime.utcnow(),
-	  "pid" : random_object_id(),
-	  "eid" : random_object_id(),
+	  "pid" : random_object_id_from_datetime(),
+	  "eid" : random_object_id_from_datetime(),
 	  "v1" : random.uniform(10, 90),
 	  "v2" : random.uniform(50, 500),
 	  "v3" : random.uniform(200, 222222),
 	  "cfg" : "测试测试测试测试",
-	  "outid" : random_object_id(),
+	  "outid" : random_object_id_from_datetime(),
 	  "_tick" : datetime.utcnow()
 	}
 	return data
@@ -99,7 +105,11 @@ def tbl_report_raw_run_test():
 	general_test_count({'outid' : ObjectId("5b574baa0000000000000000")})
 	# TODO 测试_tick
 	print "###多个条件混合匹配###"
-	general_test_print({'uyear' : {'$gt' : 2017}, 'v1' : {'$gt' : 89.9}})
+	general_test_count({'uyear' : {'$gt' : 2017}, 'v1' : {'$gt' : 89.9}})
+	general_test_count({'uyear' : {'$gt' : 2015}, 'v1' : {'$gt' : 10}, 
+						'klist' : {'$in': [ObjectId('5b25389d0000000000000000')]}})
+	general_test_count({'uyear' : {'$gt' : 2015}, 'exttype' : 400, 
+						'klist' : {'$in': [ObjectId("5a0ab7dad5cb310b9830ef27")]}})
 # 通用测试函数 计数
 def general_test_count(query):
 	fields = query.keys()
