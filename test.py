@@ -1,7 +1,5 @@
-# encoding: utf-8
-from __future__ import division
+# -*- coding:utf-8 -*-
 import pymongo
-import pprint
 import random
 from pymongo import MongoClient
 from bson.objectid import ObjectId
@@ -17,6 +15,7 @@ client = MongoClient()
 # 选择 test_tbl db
 db = client['test_report']
 
+
 # 从时间随机生成ObjectId
 def random_object_id_from_datetime():
     from_datetime = datetime.utcnow() + timedelta(days=random.randint(1, 10),hours=random.randint(1, 10),minutes=random.randint(0, 50),weeks=random.randint(1, 10))
@@ -30,12 +29,12 @@ def random_object_id_from_randint(n):
 
 # 打印Usage
 def print_usage():
-	print "Usage: test.py -n <number_of_inserts> -t <tbl_name>"
+	print("Usage: test.py -n <number_of_inserts> -t <tbl_name>")
 
 # 生成随机数据list
 def random_data_list(func, n=100000):
 	data_list = []
-	for _ in xrange(n):
+	for _ in range(n):
 		data_list.append(func())
 	return data_list
 
@@ -47,10 +46,10 @@ def add_random_data(func, n=100000):
 	end = datetime.utcnow()
 	end_sec = time.time()
 	time_ms = (end_sec - start_sec) * 1000
-	print "开始时间： " + str(start)
-	print "结束时间： " + str(end)
-	print "插入{num}条数据用时： {time}".format(num=n, time=(end - start))
-	print "每条数据平均用时： {time_ms}毫秒".format(time_ms=(time_ms / n))
+	print("开始时间： " + str(start))
+	print("结束时间： " + str(end))
+	print("插入{num}条数据用时： {time}".format(num=n, time=(end - start)))
+	print("每条数据平均用时： {time_ms}毫秒".format(time_ms=(time_ms / n)))
 
 
 # tbl_report_raw 集合 随机数据生成
@@ -62,9 +61,9 @@ def tbl_report_raw_random_data():
 	  "exttype" : random.randint(1, 600),
 	  "type" : random.randint(1, 6) * 10,
 	  "tag" : [],
-	  "klist" : [random_object_id_from_randint(10000) for _ in xrange(random.randint(0,5))],
-	  "rlist" : [random_object_id_from_randint(100) for _ in xrange(random.randint(0,7))],
-	  "extlist" : [random_object_id_from_randint(10000) for _ in xrange(random.randint(0,10))],
+	  "klist" : [random_object_id_from_randint(10000) for _ in range(random.randint(0,5))],
+	  "rlist" : [random_object_id_from_randint(100) for _ in range(random.randint(0,7))],
+	  "extlist" : [random_object_id_from_randint(10000) for _ in range(random.randint(0,10))],
 	  "uid" : random_object_id_from_datetime(),
 	  "uyear" : random.randint(2000, 2018),
 	  "date" : datetime.utcnow(),
@@ -88,9 +87,9 @@ def tbl_report_raw_separate_date_random_data():
 	  "exttype" : random.randint(1, 600),
 	  "type" : random.randint(1, 6) * 10,
 	  "tag" : [],
-	  "klist" : [random_object_id_from_randint(10000) for _ in xrange(random.randint(0,5))],
-	  "rlist" : [random_object_id_from_randint(100) for _ in xrange(random.randint(0,7))],
-	  "extlist" : [random_object_id_from_randint(10000) for _ in xrange(random.randint(0,10))],
+	  "klist" : [random_object_id_from_randint(10000) for _ in range(random.randint(0,5))],
+	  "rlist" : [random_object_id_from_randint(100) for _ in range(random.randint(0,7))],
+	  "extlist" : [random_object_id_from_randint(10000) for _ in range(random.randint(0,10))],
 	  "uid" : random_object_id_from_datetime(),
 	  "uyear" : random.randint(2000, 2018),
 	  "date_y" : random.randint(2010, 2018),
@@ -110,7 +109,7 @@ def tbl_report_raw_separate_date_random_data():
 
 # tbl_report_raw 集合 测试函数
 def tbl_report_raw_run_test():
-	print "###单个条件匹配###"
+	print("###单个条件匹配###")
 	# TODO 测试name
 	# TODO 测试flag
 	general_test_count({'extid' : ObjectId('5b7702090000000000000000')})
@@ -130,7 +129,7 @@ def tbl_report_raw_run_test():
 	general_test_count({'v3' : {'$gt' : 200, '$lt' : 100000}})
 	general_test_count({'outid' : ObjectId("5b574baa0000000000000000")})
 	# TODO 测试_tick
-	print "###多个条件混合匹配###"
+	print("###多个条件混合匹配###")
 	general_test_count({'uyear' : {'$gt' : 2017}, 'v1' : {'$gt' : 89.9}})
 	general_test_count({'uyear' : {'$gt' : 2015}, 'v1' : {'$gt' : 10}, 
 						'klist' : {'$in': [ObjectId('5b25389d0000000000000000')]}})
@@ -139,52 +138,53 @@ def tbl_report_raw_run_test():
 # 通用测试函数 计数
 def general_test_count(query):
 	fields = query.keys()
-	print "[测试搜索{fields}]".format(fields=fields)
-	print "查询条件： " + str(query)
+	print("[测试搜索{fields}]".format(fields=fields))
+	print("查询条件： " + str(query))
 	start = start_sec = time.time()
 	results = collection.find(query).count()
 	end = end_sec = time.time()
 	time_ms = (end_sec - start_sec) * 1000
-	print "用时： {time_ms}毫秒".format(time_ms=time_ms)
-	print "结果个数: " + str(results)
-	print ""
+	print("用时： {time_ms}毫秒".format(time_ms=time_ms))
+	print("结果个数: " + str(results))
+	print("")
 	return int(results)
 
 # 通用测试函数 打印
 def general_test_print(query, limit=1000000):
 	fields = query.keys()
-	print "[测试搜索{fields}]".format(fields=fields)
-	print "查询条件： " + str(query)
-	print "限制个数: " + str(limit)
+	print("[测试搜索{fields}]".format(fields=fields))
+	print("查询条件： " + str(query))
+	print("限制个数: " + str(limit))
 	start = start_sec = time.time()
 	results = collection.find(query).limit(limit)
 	end = end_sec = time.time()
 	time_ms = (end_sec - start_sec) * 1000
-	print "用时： {time_ms}毫秒".format(time_ms=time_ms)
-	print "结果个数： " + str(results.count())
+	print("用时： {time_ms}毫秒".format(time_ms=time_ms))
+	print("结果个数： " + str(results.count()))
 	for result in results:
-		print "_id: " + str(result['_id']) , \
-		({field : result[field] for field in fields})
-	print ""
+		print("_id: " + str(result['_id']) , \
+		({field : result[field] for field in fields}))
+	print("")
 
+# 通用函数 批量删除
 def general_delete(query):
 	count = general_test_count(query)
 	if count:
-		print "即将删除{count}条数据, [Y/N]?".format(count=count)
+		print("即将删除{count}条数据, [Y/N]?".format(count=count))
 		sys.stdout.flush()
-		option = raw_input()
+		option = input()
 		if option != 'Y':
-			print "放弃删除"
+			print("放弃删除")
 		else:
 			start = start_sec = time.time()
 			collection.delete_many(query)
 			end = end_sec = time.time()
 			time_ms = (end_sec - start_sec) * 1000
-			print "用时： {time_ms}毫秒".format(time_ms=time_ms)
-			print "删除个数： ", count
-			print "删除每条数据平均用时： {time_ms}毫秒".format(time_ms=(time_ms / count))
+			print("用时： {time_ms}毫秒".format(time_ms=time_ms))
+			print("删除个数： ", count)
+			print("删除每条数据平均用时： {time_ms}毫秒".format(time_ms=(time_ms / count)))
 	else:
-		print "无数据可供删除"
+		print("无数据可供删除")
 
 # main
 if __name__ == '__main__':
@@ -207,7 +207,7 @@ if __name__ == '__main__':
 			try:
 				num = int(arg)
 				if num <= 0:
-					print "插入数据数量需要大于零"
+					print("插入数据数量需要大于零")
 					print_usage()
 					sys.exit(2)
 				insert_data = True
@@ -233,4 +233,4 @@ if __name__ == '__main__':
 	if run_test:
 		tbl_report_raw_run_test()
 	if delete_data:
-		general_delete({'exttype' : 402})
+		general_delete({'exttype' : {'$gte' : 20}})
