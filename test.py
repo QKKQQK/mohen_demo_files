@@ -99,7 +99,7 @@ def tbl_report_raw_run_test():
 	general_test_count('outid', {'outid' : ObjectId("5b574baa0000000000000000")})
 	# TODO 测试_tick
 	print "###多个条件混合匹配###"
-	general_test_print(['uyear', 'v1'], {'uyear' : {'$gt' : 2017}, 'v1' : {'$gt' : 89.9}})
+	general_test_print({'uyear' : {'$gt' : 2017}, 'v1' : {'$gt' : 89.9}})
 # 通用测试函数 计数
 def general_test_count(field, query):
 	print "[测试搜索{field}]".format(field=field)
@@ -113,7 +113,8 @@ def general_test_count(field, query):
 	print ""
 
 # 通用测试函数 打印
-def general_test_print(fields, query, limit=1000000):
+def general_test_print(query, limit=1000000):
+	fields = query.keys()
 	print "[测试搜索{fields}]".format(fields=fields)
 	print "查询条件： " + str(query)
 	print "限制个数: " + str(limit)
