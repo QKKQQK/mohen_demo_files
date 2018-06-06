@@ -15,7 +15,7 @@ import time
 # 默认localhost 27017
 client = MongoClient()
 # 选择 test_tbl db
-db = client['test_tbl']
+db = client['test_report']
 
 # 从时间随机生成ObjectId
 def random_object_id_from_datetime():
@@ -31,8 +31,6 @@ def random_object_id_from_randint(n):
 # 打印Usage
 def print_usage():
 	print "Usage: test.py -n <number_of_inserts> -t <tbl_name>"
-
-
 
 # 生成随机数据list
 def random_data_list(func, n=100000):
@@ -53,7 +51,6 @@ def add_random_data(func, n=100000):
 	print "结束时间： " + str(end)
 	print "插入{num}条数据用时： {time}".format(num=n, time=(end - start))
 	print "每条数据平均用时： {time_ms}毫秒".format(time_ms=(time_ms / n))
-
 
 
 # tbl_report_raw 集合 随机数据生成
@@ -79,6 +76,35 @@ def tbl_report_raw_random_data():
 	  "cfg" : "测试测试测试测试",
 	  "outid" : random_object_id_from_datetime(),
 	  "_tick" : datetime.utcnow()
+	}
+	return data
+
+# tbl_report_raw_separate_date 集合 随机数据生成
+def tbl_report_raw_separate_date_random_data():
+	data = {
+	  "name" : "手写风格",
+	  "flag" : random.randint(0, 1),
+	  "extid" : random_object_id_from_datetime(),
+	  "exttype" : random.randint(1, 600),
+	  "type" : random.randint(1, 6) * 10,
+	  "tag" : [],
+	  "klist" : [random_object_id_from_randint(10000) for _ in xrange(random.randint(0,5))],
+	  "rlist" : [random_object_id_from_randint(100) for _ in xrange(random.randint(0,7))],
+	  "extlist" : [random_object_id_from_randint(10000) for _ in xrange(random.randint(0,10))],
+	  "uid" : random_object_id_from_datetime(),
+	  "uyear" : random.randint(2000, 2018),
+	  "date_y" : random.randint(2010, 2018),
+	  "date_m" : random.randint(1, 12),
+	  "date_d" : random.randint(1, 31),
+	  "date_t" : datetime.utcnow(),
+	  "pid" : random_object_id_from_datetime(),
+	  "eid" : random_object_id_from_datetime(),
+	  "v1" : random.uniform(10, 90),
+	  "v2" : random.uniform(50, 500),
+	  "v3" : random.uniform(200, 222222),
+	  "cfg" : "测试测试测试测试",
+	  "outid" : random_object_id_from_datetime(),
+	  "_tick" : time.time()
 	}
 	return data
 
@@ -122,6 +148,7 @@ def general_test_count(query):
 	print "用时： {time_ms}毫秒".format(time_ms=time_ms)
 	print "结果个数: " + str(results)
 	print ""
+	return int(results)
 
 # 通用测试函数 打印
 def general_test_print(query, limit=1000000):
@@ -140,6 +167,24 @@ def general_test_print(query, limit=1000000):
 		({field : result[field] for field in fields})
 	print ""
 
+def general_delete(query):
+	count = general_test_count(query)
+	if count:
+		print "即将删除{count}条数据, [Y/N]?".format(count=count)
+		sys.stdout.flush()
+		option = raw_input()
+		if option != 'Y':
+			print "放弃删除"
+		else:
+			start = start_sec = time.time()
+			collection.delete_many(query)
+			end = end_sec = time.time()
+			time_ms = (end_sec - start_sec) * 1000
+			print "用时： {time_ms}毫秒".format(time_ms=time_ms)
+			print "删除个数： ", count
+			print "删除每条数据平均用时： {time_ms}毫秒".format(time_ms=(time_ms / count))
+	else:
+		print "无数据可供删除"
 
 # main
 if __name__ == '__main__':
@@ -148,11 +193,12 @@ if __name__ == '__main__':
 	func = None
 	run_test = False
 	insert_data = False
+	delete_data = False
 	if len(sys.argv) < 4:
 		print_usage()
 		sys.exit(1)
 	try:
-		opts, args = getopt.getopt(sys.argv[1:], "n:f:t")
+		opts, args = getopt.getopt(sys.argv[1:], "n:f:td")
 	except getopt.GetoptError:
 		print_usage()
 		sys.exit(1)
@@ -171,12 +217,14 @@ if __name__ == '__main__':
 		elif opt == '-f':
 			if arg == 'raw':
 				func = tbl_report_raw_random_data
-				collection = db['tbl_report_raw_test']
+				collection = db['tbl_report_raw']
 			else:
 				print_usage()
 				sys.exit(1)
 		elif opt == '-t':
 			run_test = True
+		elif opt == '-d':
+			delete_data = True
 		else:
 			print_usage()
 			sys.exit(3)
@@ -184,3 +232,5 @@ if __name__ == '__main__':
 		add_random_data(func, n=num)
 	if run_test:
 		tbl_report_raw_run_test()
+	if delete_data:
+		general_delete({'exttype' : 402})
