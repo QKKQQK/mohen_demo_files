@@ -160,16 +160,16 @@ def tbl_report_raw_separate_date_run_test():
 	general_test_count({'pid' : ObjectId("5b2296760000000000000000")})
 	general_test_count({'eid' : ObjectId("5b479e3a0000000000000000")})
 	general_test_count({'v1' : {'$gt' : 55, '$lt' : 60}})
-	general_test_count({'v2' : {'$gt' : 150, '$lt' : 300}})
-	general_test_count({'v3' : {'$gt' : 200, '$lt' : 100000}})
+	general_test_count({'v2' : {'$gt' : 150, '$lt' : 200}})
+	general_test_count({'v3' : {'$gt' : 200, '$lt' : 1000}})
 	general_test_count({'outid' : ObjectId("5b574baa0000000000000000")})
 	# TODO 测试_tick
 	print("###多个条件混合匹配###")
-	general_test_count({'uyear' : {'$gt' : 2017}, 'v1' : {'$gt' : 80}})
-	general_test_count({'uyear' : {'$gt' : 2015}, 'v1' : {'$gt' : 10}, 
-						'klist' : {'$in': [ObjectId('5b25389d0000000000000000')]}})
-	general_test_count({'uyear' : {'$gt' : 2015}, 'exttype' : 400, 
-						'klist' : {'$in': [ObjectId("5a0ab7dad5cb310b9830ef27")]}})
+	# 选择exttype, klist知识点元素，特定日期，特定时间
+	general_test_count({'exttype' : {'$gt' : 400}, 
+						'klist' : {'$in': [random_object_id_from_randint(10000)]},
+						'date_y' : 2018, 'date_m' : 6, 'date_d' : 5,
+						'time_h' : 12, 'time_m' : 30, 'time_s': 30})
 
 # 通用测试函数 计数
 def general_test_count(query):
@@ -225,6 +225,7 @@ def general_delete(query):
 # main
 if __name__ == '__main__':
 	global collection
+	print(t.localtime())
 	num = 10000
 	func = None
 	test_func = None
@@ -275,4 +276,4 @@ if __name__ == '__main__':
 	if run_test:
 		run_test_suite(test_func)
 	if delete_data:
-		general_delete({'exttype' : {'$gte' : 20}})
+		general_delete({'exttype' : {'$gte' : 0}})
