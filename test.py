@@ -5,15 +5,17 @@ from pymongo import MongoClient
 from bson.objectid import ObjectId
 import sys
 import getopt
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, tzinfo
 import time as t
+import pytz
 
 
 # 默认localhost 27017
 client = MongoClient()
 # 选择 test_tbl db
 db = client['test_report']
-
+# 时区
+tz = pytz.timezone('Asia/Shanghai')
 
 # 从时间随机生成ObjectId
 def random_object_id_from_datetime():
@@ -53,6 +55,7 @@ def add_random_data(func, n=100000):
 
 # tbl_report_raw 集合 随机数据生成
 def tbl_report_raw_random_data():
+	created = datetime.utcnow()
 	data = {
 	  "name" : "手写风格",
 	  "flag" : random.randint(0, 1),
@@ -65,7 +68,7 @@ def tbl_report_raw_random_data():
 	  "extlist" : [random_object_id_from_randint(10000) for _ in range(random.randint(0,10))],
 	  "uid" : random_object_id_from_datetime(),
 	  "uyear" : random.randint(2000, 2018),
-	  "date" : datetime.utcnow(),
+	  "date" : created,
 	  "pid" : random_object_id_from_datetime(),
 	  "eid" : random_object_id_from_datetime(),
 	  "v1" : random.uniform(10, 90),
@@ -73,7 +76,7 @@ def tbl_report_raw_random_data():
 	  "v3" : random.uniform(200, 222222),
 	  "cfg" : "测试测试测试测试",
 	  "outid" : random_object_id_from_datetime(),
-	  "_tick" : datetime.utcnow()
+	  "_tick" : t.mktime(created.timetuple())
 	}
 	return data
 
@@ -139,9 +142,7 @@ def tbl_report_raw_run_test():
 						'klist' : {'$in': [ObjectId('5b25389d0000000000000000')]}})
 	general_test_count({'uyear' : {'$gt' : 2015}, 'exttype' : 400, 
 						'klist' : {'$in': [ObjectId("5a0ab7dad5cb310b9830ef27")]}})
-	general_test_count({'exttype' : {'$gt' : 400}, 
-						'klist' : {'$in': [random_object_id_from_randint(10000)]},
-						'date' : {'$gt' : datetime(2018,6,5,23,30), '$lt' : datetime(2018,6,7)}})
+	general_test_print({'date' : {'$lt' : datetime.now(tz)}})
 
 def tbl_report_raw_separate_date_run_test():
 	print("###单个条件匹配###")
@@ -166,10 +167,20 @@ def tbl_report_raw_separate_date_run_test():
 	# TODO 测试_tick
 	print("###多个条件混合匹配###")
 	# 选择exttype, klist知识点元素，特定日期，特定时间
-	general_test_count({'exttype' : {'$gt' : 400}, 
-						'klist' : {'$in': [random_object_id_from_randint(10000)]},
-						'date_y' : 2018, 'date_m' : 6, 'date_d' : 5,
-						'time_h' : 12, 'time_m' : 30, 'time_s': 30})
+	general_test_count({'exttype' : 400, 
+						'type' : 30,
+						'date_y' : 2016, 'date_m' : 6})
+	general_test_count({'klist' : {'$in': [random_object_id_from_randint(10000) for _ in range(30)]},
+						'date_y' : 2015, 'date_m' : 6,
+						'time_h' : {'$gt' : 12}})
+	general_test_count({'klist' : {'$in': [random_object_id_from_randint(10000) for _ in range(30)]},
+						'date_y' : 2015, 'date_m' : 6})
+	# 选择exttype, klist知识点元素，日期范围
+	stamp = t.mktime(datetime(2015,9,10,hour=12,minute=30,second=30))
+	print(stamp)
+	general_test_count({'klist' : {'$in': [random_object_id_from_randint(10000) for _ in range(30)]},
+						'_tick' : {'$gt' : stamp}})
+
 
 # 通用测试函数 计数
 def general_test_count(query):
@@ -256,7 +267,7 @@ if __name__ == '__main__':
 			if arg == 'raw':
 				func = tbl_report_raw_random_data
 				test_func = tbl_report_raw_run_test
-				collection = db['tbl_report_raw']
+				collection = db['tbl_report_raw2']
 			elif arg == 'raw_s':
 				func = tbl_report_raw_separate_date_random_data
 				test_func = tbl_report_raw_separate_date_run_test
