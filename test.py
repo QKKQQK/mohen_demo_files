@@ -94,8 +94,8 @@ def tbl_report_raw_separate_date_random_data():
 	  "uyear" : random.randint(2000, 2018),
 	  "date_y" : random.randint(2010, 2018),
 	  "date_m" : random.randint(1, 12),
-	  "date_d" : random.randint(1, 31),
-	  "date_t" : datetime.utcnow(),
+	  "date_d" : random.randint(1, 28),
+	  "date_t" : datetime.time(random.randint(0,23), random.randint(0,59), random.randint(0,59)),
 	  "pid" : random_object_id_from_datetime(),
 	  "eid" : random_object_id_from_datetime(),
 	  "v1" : random.uniform(10, 90),
@@ -135,6 +135,9 @@ def tbl_report_raw_run_test():
 						'klist' : {'$in': [ObjectId('5b25389d0000000000000000')]}})
 	general_test_count({'uyear' : {'$gt' : 2015}, 'exttype' : 400, 
 						'klist' : {'$in': [ObjectId("5a0ab7dad5cb310b9830ef27")]}})
+	general_test_print({'exttype' : {'$gt' : 400}, 
+						'klist' : {'$in': [random_object_id_from_randint(10000)]},
+						'date' : {'$gt' : datetime(2018,6,5,23,30), '$lt' : datetime(2018,6,7)}})
 # 通用测试函数 计数
 def general_test_count(query):
 	fields = query.keys()
@@ -218,6 +221,9 @@ if __name__ == '__main__':
 			if arg == 'raw':
 				func = tbl_report_raw_random_data
 				collection = db['tbl_report_raw']
+			elif arg == 'raw_s':
+				func = tbl_report_raw_separate_date_random_data
+				collection = db['tbl_report_raw_separate_date']
 			else:
 				print_usage()
 				sys.exit(1)
