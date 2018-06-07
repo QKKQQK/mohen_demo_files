@@ -39,6 +39,15 @@ def random_data_list(func, n=100000):
 		data_list.append(func())
 	return data_list
 
+# 把UTC时间改成UTC+8
+def to_utc_8_datetime(year, month=1, day=1, hour=0, minute=0, second=0, microsecond=0):
+	if not year:
+		year = 1970
+		hour = 9
+	return datetime(year, month, day, hour, minute, second, microsecond) + \
+			timedelta(hours=8)
+
+
 # 生成随机数据
 def add_random_data(func, n=100000):
 	start = datetime.utcnow()
@@ -51,7 +60,6 @@ def add_random_data(func, n=100000):
 	print("结束时间： " + str(end))
 	print("插入{num}条数据用时： {time}".format(num=n, time=(end - start)))
 	print("每条数据平均用时： {time_ms}毫秒".format(time_ms=(time_ms / n)))
-
 
 # tbl_report_raw 集合 随机数据生成
 def tbl_report_raw_random_data():
@@ -236,7 +244,6 @@ def general_delete(query):
 # main
 if __name__ == '__main__':
 	global collection
-	print(t.localtime())
 	num = 10000
 	func = None
 	test_func = None
