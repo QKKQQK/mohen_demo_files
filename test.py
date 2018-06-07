@@ -5,9 +5,8 @@ from pymongo import MongoClient
 from bson.objectid import ObjectId
 import sys
 import getopt
-from datetime import datetime
-from datetime import timedelta
-import time
+from datetime import datetime, timedelta
+import time as t
 
 
 # 默认localhost 27017
@@ -41,10 +40,10 @@ def random_data_list(func, n=100000):
 # 生成随机数据
 def add_random_data(func, n=100000):
 	start = datetime.utcnow()
-	start_sec = time.time()
+	start_sec = t.time()
 	collection.insert_many(random_data_list(func, n=n))
 	end = datetime.utcnow()
-	end_sec = time.time()
+	end_sec = t.time()
 	time_ms = (end_sec - start_sec) * 1000
 	print("开始时间： " + str(start))
 	print("结束时间： " + str(end))
@@ -95,7 +94,9 @@ def tbl_report_raw_separate_date_random_data():
 	  "date_y" : random.randint(2010, 2018),
 	  "date_m" : random.randint(1, 12),
 	  "date_d" : random.randint(1, 28),
-	  "date_t" : datetime.time(random.randint(0,23), random.randint(0,59), random.randint(0,59)),
+	  "time_h" : random.randint(0, 23),
+	  "time_m" : random.randint(0, 59),
+	  "time_s" : random.randint(0, 59),
 	  "pid" : random_object_id_from_datetime(),
 	  "eid" : random_object_id_from_datetime(),
 	  "v1" : random.uniform(10, 90),
@@ -103,9 +104,12 @@ def tbl_report_raw_separate_date_random_data():
 	  "v3" : random.uniform(200, 222222),
 	  "cfg" : "测试测试测试测试",
 	  "outid" : random_object_id_from_datetime(),
-	  "_tick" : time.time()
+	  "_tick" : t.time()
 	}
 	return data
+
+def run_test_suite(func):
+	func()
 
 # tbl_report_raw 集合 测试函数
 def tbl_report_raw_run_test():
@@ -135,17 +139,39 @@ def tbl_report_raw_run_test():
 						'klist' : {'$in': [ObjectId('5b25389d0000000000000000')]}})
 	general_test_count({'uyear' : {'$gt' : 2015}, 'exttype' : 400, 
 						'klist' : {'$in': [ObjectId("5a0ab7dad5cb310b9830ef27")]}})
-	general_test_print({'exttype' : {'$gt' : 400}, 
+	general_test_count({'exttype' : {'$gt' : 400}, 
 						'klist' : {'$in': [random_object_id_from_randint(10000)]},
 						'date' : {'$gt' : datetime(2018,6,5,23,30), '$lt' : datetime(2018,6,7)}})
+
+def tbl_report_raw_separate_date_run_test():
+	print("###单个条件匹配###")
+	# TODO 测试name
+	# TODO 测试flag
+	general_test_count({'extid' : ObjectId('5b7702090000000000000000')})
+	general_test_count({'exttype' : 355})
+	general_test_count({'type' : 50})
+	# TODO 测试tag
+	general_test_count({'klist' : {'$in': [ObjectId('5b25389d0000000000000000')]}})
+	general_test_count({'rlist' : {'$in': [ObjectId("5b6215650000000000000000")]}})
+	# TODO 测试extlist
+	general_test_count({'uid' : ObjectId("5b3d42210000000000000000")})
+	general_test_count({'uyear' : {'$gt' : 2016}})
+	# TODO 测试date
+	general_test_count({'pid' : ObjectId("5b2296760000000000000000")})
+	general_test_count({'eid' : ObjectId("5b479e3a0000000000000000")})
+	general_test_count({'v1' : {'$gt' : 55, '$lt' : 60}})
+	general_test_count({'v2' : {'$gt' : 150, '$lt' : 300}})
+	general_test_count({'v3' : {'$gt' : 200, '$lt' : 100000}})
+	general_test_count({'outid' : ObjectId("5b574baa0000000000000000")})
+
 # 通用测试函数 计数
 def general_test_count(query):
 	fields = query.keys()
 	print("[测试搜索{fields}]".format(fields=fields))
 	print("查询条件： " + str(query))
-	start = start_sec = time.time()
+	start = start_sec = t.time()
 	results = collection.find(query).count()
-	end = end_sec = time.time()
+	end = end_sec = t.time()
 	time_ms = (end_sec - start_sec) * 1000
 	print("用时： {time_ms}毫秒".format(time_ms=time_ms))
 	print("结果个数: " + str(results))
@@ -158,9 +184,9 @@ def general_test_print(query, limit=1000000):
 	print("[测试搜索{fields}]".format(fields=fields))
 	print("查询条件： " + str(query))
 	print("限制个数: " + str(limit))
-	start = start_sec = time.time()
+	start = start_sec = t.time()
 	results = collection.find(query).limit(limit)
-	end = end_sec = time.time()
+	end = end_sec = t.time()
 	time_ms = (end_sec - start_sec) * 1000
 	print("用时： {time_ms}毫秒".format(time_ms=time_ms))
 	print("结果个数： " + str(results.count()))
@@ -179,9 +205,9 @@ def general_delete(query):
 		if option != 'Y':
 			print("放弃删除")
 		else:
-			start = start_sec = time.time()
+			start = start_sec = t.time()
 			collection.delete_many(query)
-			end = end_sec = time.time()
+			end = end_sec = t.time()
 			time_ms = (end_sec - start_sec) * 1000
 			print("用时： {time_ms}毫秒".format(time_ms=time_ms))
 			print("删除个数： ", count)
@@ -194,6 +220,7 @@ if __name__ == '__main__':
 	global collection
 	num = 10000
 	func = None
+	test_func = None
 	run_test = False
 	insert_data = False
 	delete_data = False
@@ -220,9 +247,11 @@ if __name__ == '__main__':
 		elif opt == '-f':
 			if arg == 'raw':
 				func = tbl_report_raw_random_data
+				test_func = tbl_report_raw_run_test
 				collection = db['tbl_report_raw']
 			elif arg == 'raw_s':
 				func = tbl_report_raw_separate_date_random_data
+				test_func = tbl_report_raw_separate_date_run_test
 				collection = db['tbl_report_raw_separate_date']
 			else:
 				print_usage()
@@ -237,6 +266,6 @@ if __name__ == '__main__':
 	if insert_data:
 		add_random_data(func, n=num)
 	if run_test:
-		tbl_report_raw_run_test()
+		run_test_suite(test_func)
 	if delete_data:
 		general_delete({'exttype' : {'$gte' : 20}})
