@@ -8,6 +8,7 @@ import getopt
 from datetime import datetime, timedelta, tzinfo
 import time as t
 import pytz
+import re
 
 
 # 默认localhost 27017
@@ -195,6 +196,8 @@ def tbl_report_raw_run_test():
 	general_test_count({'uyear' : {'$gt' : 2015}, 'exttype' : 400, 
 						'klist' : {'$in': [ObjectId("5a0ab7dad5cb310b9830ef27")]}})
 	general_test_print({'date' : {'$lt' : datetime.now(tz)}})
+	general_test_count({'uyear' : {'$gt' : 2016}, 'exttype' : {'$gt' : 400}, 
+						'extlist.test_path' : {'$exists' : True, '$in' : [ObjectId('000000000000000000001186')]}})
 
 def tbl_report_raw_separate_date_run_test():
 	print("###单个条件匹配###")
@@ -262,7 +265,7 @@ def general_test_print(query, limit=1000000):
 	print("结果个数： " + str(results.count()))
 	for result in results:
 		print("_id: " + str(result['_id']) , \
-		({field : result[field] for field in fields}))
+		({field : result[re.sub('\.+.*', '', field)] for field in fields}))
 	print("")
 
 # 通用函数 批量删除
