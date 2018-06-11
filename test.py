@@ -195,7 +195,6 @@ def tbl_report_raw_run_test():
 						'klist' : {'$in': [ObjectId('5b25389d0000000000000000')]}})
 	general_test_count({'uyear' : {'$gt' : 2015}, 'exttype' : 400, 
 						'klist' : {'$in': [ObjectId("5a0ab7dad5cb310b9830ef27")]}})
-	general_test_print({'date' : {'$lt' : datetime.now(tz)}})
 	general_test_count({'uyear' : {'$gt' : 2016}, 'exttype' : {'$gt' : 400}, 
 						'extlist.test_path' : {'$exists' : True, '$in' : [ObjectId('000000000000000000001186')]}})
 
