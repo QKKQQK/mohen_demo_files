@@ -17,6 +17,22 @@ db = client['test_report']
 # 时区
 tz = pytz.timezone('Asia/Shanghai')
 
+html_tags = ["a","abbr","acronym","address","applet","area","article","aside",
+			 "audio","b","base","basefont","bdi","bdo","big","blockquote","body",
+			 "br","button","canvas","caption","center","cite","code","col",
+			 "colgroup","command","datalist","dd","del","details","dir","div",
+			 "dfn","dialog","dl","dt","em","embed","fieldset","figcaption",
+			 "figure","font","footer","form","frame","frameset","h6","head",
+			 "header","hr","html","i","iframe","img","input","ins","isindex",
+			 "kbd","keygen","label","legend","li","link","map","mark","menu",
+			 "meta","meter","nav","noframes","noscript","object","ol","optgroup",
+			 "option","output","p","param","pre","progress","q","rp","rt","ruby",
+			 "s","samp","script","section","select","small","source","span",
+			 "strike","strong","style","sub","details","sup","table","tbody",
+			 "td","textarea","tfoot","th","thead","time","title","tr","track",
+			 "tt","u","ul","var","video","wbr","xmp"]
+
+
 # 从时间随机生成ObjectId
 def random_object_id_from_datetime():
     from_datetime = datetime.utcnow() + timedelta(days=random.randint(1, 10),hours=random.randint(1, 10),minutes=random.randint(0, 50),weeks=random.randint(1, 10))
@@ -63,28 +79,31 @@ def add_random_data(func, n=100000):
 
 # tbl_report_raw 集合 随机数据生成
 def tbl_report_raw_random_data():
-	created = datetime.utcnow()
+	utc_timestamp = t.time() + t.timezone
+	utc_datetime = datetime.fromtimestamp(utc_timestamp)
+	exttype = random.randint(1, 600)
+
 	data = {
 	  "name" : "手写风格",
 	  "flag" : random.randint(0, 1),
 	  "extid" : random_object_id_from_datetime(),
-	  "exttype" : random.randint(1, 600),
-	  "type" : random.randint(1, 6) * 10,
+	  "exttype" : exttype,
+	  "type" : exttype // 10,
 	  "tag" : [],
 	  "klist" : [random_object_id_from_randint(10000) for _ in range(random.randint(0,5))],
 	  "rlist" : [random_object_id_from_randint(100) for _ in range(random.randint(0,7))],
 	  "extlist" : [random_object_id_from_randint(10000) for _ in range(random.randint(0,10))],
 	  "uid" : random_object_id_from_datetime(),
-	  "uyear" : random.randint(2000, 2018),
-	  "date" : created,
+	  "uyear" : random.randint(2013, 2018),
+	  "utc_date" : utc_datetime,
 	  "pid" : random_object_id_from_datetime(),
 	  "eid" : random_object_id_from_datetime(),
 	  "v1" : random.uniform(10, 90),
 	  "v2" : random.uniform(50, 500),
 	  "v3" : random.uniform(200, 222222),
 	  "cfg" : "测试测试测试测试",
-	  "outid" : random_object_id_from_datetime(),
-	  "_tick" : t.mktime(created.timetuple())
+	  "id" : random_object_id_from_datetime(),
+	  "utc_tick" : utc_timestamp
 	}
 	return data
 
