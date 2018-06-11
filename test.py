@@ -84,26 +84,45 @@ def tbl_report_raw_random_data():
 	exttype = random.randint(1, 600)
 
 	data = {
-	  "name" : "手写风格",
+	  # 上传唯一id
+	  # "_id" : random_object_id_from_datetime(),
+	  # parent id
+	  "pid" : random_object_id_from_datetime(),
+	  # 事件名称
+	  "name" : random.sample(html_tags, 1),
+	  # 可用作删除
 	  "flag" : random.randint(0, 1),
+	  # 分类
 	  "extid" : random_object_id_from_datetime(),
 	  "exttype" : exttype,
 	  "type" : exttype // 10,
-	  "tag" : [],
+	  # 拓展类别，如用户性别
+	  "tag" : [random_object_id_from_randint(1000) for _ in range(random.randint(0,5))],
+	  # 知识点树路径
 	  "klist" : [random_object_id_from_randint(10000) for _ in range(random.randint(0,5))],
+	  # 关系树路径
 	  "rlist" : [random_object_id_from_randint(100) for _ in range(random.randint(0,7))],
-	  "extlist" : [random_object_id_from_randint(10000) for _ in range(random.randint(0,10))],
-	  "uid" : random_object_id_from_datetime(),
+	  # 拓展路径
+	  "extlist" : { 'test_path' : [random_object_id_from_randint(10000) for _ in range(random.randint(0,10))] },
+	  # 届
 	  "uyear" : random.randint(2013, 2018),
-	  "utc_date" : utc_datetime,
-	  "pid" : random_object_id_from_datetime(),
+	  # 用户ID
+	  "uid" : random_object_id_from_datetime(),
+	  # 文件ID
+	  "fid" : random_object_id_from_datetime(),
+	  # 设备ID
 	  "eid" : random_object_id_from_datetime(),
+	  # 次数
 	  "v1" : random.uniform(10, 90),
+	  # 时长(秒)
 	  "v2" : random.uniform(50, 500),
-	  "v3" : random.uniform(200, 222222),
-	  "cfg" : "测试测试测试测试",
-	  "id" : random_object_id_from_datetime(),
-	  "utc_tick" : utc_timestamp
+	  # 拓展数值
+	  "v3" : { 'test_v3' : random.uniform(200, 222222)},
+	  # 字符串数值
+	  "cfg" : random.sample(html_tags, 1),
+	  # UTC 日期时间
+	  "utc_date" : utc_datetime,
+	  "utc_ts" : utc_timestamp
 	}
 	return data
 
@@ -293,7 +312,7 @@ if __name__ == '__main__':
 			if arg == 'raw':
 				func = tbl_report_raw_random_data
 				test_func = tbl_report_raw_run_test
-				collection = db['tbl_report_raw2']
+				collection = db['tbl_report_raw3']
 			elif arg == 'raw_s':
 				func = tbl_report_raw_separate_date_random_data
 				test_func = tbl_report_raw_separate_date_run_test
