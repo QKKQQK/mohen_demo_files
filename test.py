@@ -82,6 +82,10 @@ def tbl_report_raw_random_data():
 	utc_timestamp = t.time() + t.timezone
 	utc_datetime = datetime.fromtimestamp(utc_timestamp)
 	exttype = random.randint(1, 600)
+	rand_extlist = {}
+	if random.randint(0, 9) > 4:
+		rand_extlist = {'test_path' : [random_object_id_from_randint(10000) \
+						for _ in range(random.randint(0,10))] }
 
 	data = {
 	  # 上传唯一id
@@ -103,7 +107,7 @@ def tbl_report_raw_random_data():
 	  # 关系树路径
 	  "rlist" : [random_object_id_from_randint(100) for _ in range(random.randint(0,7))],
 	  # 拓展路径
-	  "extlist" : { 'test_path' : [random_object_id_from_randint(10000) for _ in range(random.randint(0,10))] },
+	  "extlist" : rand_extlist,
 	  # 届
 	  "uyear" : random.randint(2013, 2018),
 	  # 用户ID
@@ -112,6 +116,8 @@ def tbl_report_raw_random_data():
 	  "fid" : random_object_id_from_datetime(),
 	  # 设备ID
 	  "eid" : random_object_id_from_datetime(),
+	  # 外部ID
+	  "openid" : random_object_id_from_datetime(),
 	  # 次数
 	  "v1" : random.uniform(10, 90),
 	  # 时长(秒)
@@ -171,7 +177,7 @@ def tbl_report_raw_run_test():
 	# TODO 测试tag
 	general_test_count({'klist' : {'$in': [ObjectId('5b25389d0000000000000000')]}})
 	general_test_count({'rlist' : {'$in': [ObjectId("5b6215650000000000000000")]}})
-	# TODO 测试extlist
+	general_test_count({'extlist.test_path' : {'$exists' : True, '$in' : [ObjectId('000000000000000000001186')]}})
 	general_test_count({'uid' : ObjectId("5b3d42210000000000000000")})
 	general_test_count({'uyear' : {'$gt' : 2016}})
 	# TODO 测试date
@@ -180,7 +186,7 @@ def tbl_report_raw_run_test():
 	general_test_count({'v1' : {'$gt' : 55, '$lt' : 60}})
 	general_test_count({'v2' : {'$gt' : 150, '$lt' : 300}})
 	general_test_count({'v3' : {'$gt' : 200, '$lt' : 100000}})
-	general_test_count({'outid' : ObjectId("5b574baa0000000000000000")})
+	#general_test_count({'outid' : ObjectId("5b574baa0000000000000000")})
 	# TODO 测试_tick
 	print("###多个条件混合匹配###")
 	general_test_count({'uyear' : {'$gt' : 2017}, 'v1' : {'$gt' : 89.9}})
