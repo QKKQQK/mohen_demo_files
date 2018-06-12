@@ -1,0 +1,23 @@
+{
+	  "_id" : ObjectId,
+	  "pid" : ObjectId,
+	  "name" : String,
+	  "flag" : Int32,
+	  "extid" : ObjectId,
+	  "exttype" : Int32,
+	  "type" : Int32,
+	  "tag" : [random_object_id_from_randint(1000) for _ in range(random.randint(0,5))],
+	  "klist" : [random_object_id_from_randint(10000) for _ in range(random.randint(0,5))],
+	  "rlist" : [random_object_id_from_randint(100) for _ in range(random.randint(0,7))],
+	  "extlist" : rand_extlist,
+	  "uyear" : random.randint(2013, 2018),
+	  "uid" : random_object_id_from_datetime(),
+	  "fid" : random_object_id_from_datetime(),
+	  "eid" : random_object_id_from_datetime(),
+	  "openid" : random_object_id_from_datetime(),
+	  "v1" : random.uniform(10, 90),
+	  "v2" : random.uniform(50, 500),
+	  "cfg" : random.sample(html_tags, 1),
+	  "utc_date" : utc_datetime,
+	  "utc_ts" : utc_timestamp
+	}

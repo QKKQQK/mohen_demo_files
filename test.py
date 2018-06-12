@@ -94,7 +94,7 @@ def tbl_report_raw_random_data():
 	  # parent id
 	  "pid" : random_object_id_from_datetime(),
 	  # 事件名称
-	  "name" : random.sample(html_tags, 1),
+	  "name" : random.sample(html_tags, 1)[0],
 	  # 可用作删除
 	  "flag" : random.randint(0, 1),
 	  # 分类
@@ -126,7 +126,7 @@ def tbl_report_raw_random_data():
 	  # 拓展数值
 	  "v3" : { 'test_v3' : random.uniform(200, 222222)},
 	  # 字符串数值
-	  "cfg" : random.sample(html_tags, 1),
+	  "cfg" : random.sample(html_tags, 1)[0],
 	  # UTC 日期时间
 	  "utc_date" : utc_datetime,
 	  "utc_ts" : utc_timestamp
