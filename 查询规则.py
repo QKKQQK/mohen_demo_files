@@ -38,5 +38,11 @@ x axis: $group by date [y/m/d/h/m], fid, eid...
 y axis: v1, v2, v3, (normalized)(v1, v2, v3) 
 
 [Two Set Data Presentation]
-x axis [filter 1] : v1, v2, v3, (normalized)(v1, v2, v3) 
-y axis [filter 2] : v1, v2, v3, (normalized)(v1, v2, v3) 
+x axis [filter 1] : (normalized)(v1, v2, v3) 
+y axis [filter 2] : (normalized)(v1, v2, v3) 
+
+[Multiple Set Data Presentation]
+x axis [filter 1] : alpha * (normalized)(v1, v2, v3) + \
+					beta * (normalized)(v1, v2, v3) + \
+					gamma * (normalized)(v1, v2, v3) 
+y axis [filter 2] : (normalized)(v1, v2, v3) 
