@@ -98,7 +98,6 @@ def tbl_report_raw_random_data():
 	  # 可用作删除
 	  "flag" : random.randint(0, 1),
 	  # 分类
-	  "extid" : random_object_id_from_datetime(),
 	  "exttype" : exttype,
 	  "type" : exttype // 10,
 	  # 拓展类别，如用户性别
@@ -138,7 +137,6 @@ def tbl_report_raw_separate_date_random_data():
 	data = {
 	  "name" : "手写风格",
 	  "flag" : random.randint(0, 1),
-	  "extid" : random_object_id_from_datetime(),
 	  "exttype" : random.randint(1, 600),
 	  "type" : random.randint(1, 6) * 10,
 	  "tag" : [],
@@ -320,7 +318,7 @@ if __name__ == '__main__':
 			if arg == 'raw':
 				func = tbl_report_raw_random_data
 				test_func = tbl_report_raw_run_test
-				collection = db['tbl_report_raw3']
+				collection = db['tbl_report_raw4']
 			elif arg == 'raw_s':
 				func = tbl_report_raw_separate_date_random_data
 				test_func = tbl_report_raw_separate_date_run_test
