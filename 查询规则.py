@@ -23,21 +23,28 @@
 }
 
 
-[filter]
-who:	rlist, （extlist）, ugroup, uid, openid
-where:  fid, eid, (extlist)
+
+[Filter]
+who:	rlist, (extlist), ugroup, uid
+where:  rlist, (extlist), fid, eid
 what:   name, exttype, type, tag, klist, (extlist)
-when:   (_id), (extlist), utc_date(y/m/d/h/m/s)
+when:   (_id), (extlist), utc_date(y/m/d/h/m)
 how much: v1, v2, v3, (normalized)(v1, v2, v3), cfg
 
-[Stats]
-aggregate: sum, avg, min, max
+[Group]
+rlist, (extlist), ugroup, uid, fid, eid, \
+name, exttype, type, tag, klist, date [y/m/d/h/m], cfg
 
 [Sort]
 Date, (_id？), (fid), (eid), (uid)
 
+[Aggregate]
+sum, avg, min, max
+
+
 [Single Set Data Presentation]
-x axis: $group by date [y/m/d/h/m], fid, eid...
+x axis: $group by date [y/m/d/h/m], fid, eid, \
+		name, rlist, (extlist), ugroup, uid, exttype, type, klist...
 y axis: v1, v2, v3, (normalized)(v1, v2, v3) 
 
 [Two Set Data Presentation]
@@ -51,3 +58,4 @@ x axis [filter 1] : alpha * (normalized)(v1, v2, v3) + \
 y axis [filter 2] : (normalized)(v1, v2, v3) 
 
 [Excel Tree Structure]
+
