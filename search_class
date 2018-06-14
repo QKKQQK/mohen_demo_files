@@ -1,0 +1,25 @@
+class Search {
+	String openid; // 第三方ID
+
+	Int search_type; // 搜索类型
+
+	String[] rlist_match; // [匹配搜索] 零到多个关系树中的关键词
+	Dict extlist_match; // [匹配搜索] 零到多个 拓展树名称：[树节点名称]
+	String[] ugroup_match; // [匹配搜索] 零到多个用户分组关键词
+	String[] uid_match; // [匹配搜索] 零到多个用户ID
+	String[] fid_match; // [匹配搜索] 零到多个文件ID
+	String[] eid_match; // [匹配搜索] 零到多个设备ID
+	String[] name_match; // [匹配搜索] 零到多个事件名称
+	Int[] exttype_match; // [匹配搜索] 零到多个事件小分类代码
+	Int[] type_match; // [匹配搜索] 零到多个事件大分类代码
+	String[] tag_match; // [匹配搜索] 零到多个标签
+	String[] klist_match; // [匹配搜索] 零到多个知识点树中的关键词
+	Int year; // [匹配搜索] 年
+	Int month; // [匹配搜索] 月
+	Int day; // [匹配搜索] 日
+	Int hour; // [匹配搜索] 小时
+	Int minute; // [匹配搜索] 分钟
+	Float v1; // [匹配搜索] v1数值
+	Float v2; // [匹配搜索] v2数值
+	Dict v3; // [匹配搜索] v3数值，零到多个 变量名称：数值
+}
