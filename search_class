@@ -16,7 +16,7 @@ class Search {
 	String[] klist_match; // [匹配搜索] 零到多个知识点树中的关键词
 	Int year; // [匹配搜索] 年
 	Int month; // [匹配搜索] 月
-	Int day; // [匹配搜索] 日
+	Int day; // [匹配搜索] 日	
 	Int hour; // [匹配搜索] 小时
 	Int minute; // [匹配搜索] 分钟
 	Float v1; // [匹配搜索] v1数值
@@ -42,5 +42,14 @@ class Search {
 	Int minute_upper; // [范围搜索] 分钟 搜索上限(包含)
 	Float v1_upper; // [范围搜索] v1数值 搜索上限(包含)
 	Float v2_upper; // [范围搜索] v2数值 搜索上限(包含)
-	Dict v3_upper; // [范围搜索] v3数值，零到多个 变量名称：搜索上限(包含)，变量对应v3
+	Dict v3_upper; // [范围搜索] v3数值，零到多个 变量名称：搜索上限(包含)
+
+	// 排序，默认以Date从小到大排序， 一般不推荐使用
+
+	Int asc; // 1 从小到大， -1 从大到小
+	String order_by; // 可用字段： [fid, eid, uid, name, exttype, type, v1, v2, (v3.var), cfg]
+
+	// 聚合
+	String group_type; // 可用选项：[sum, avg, min, max]
+	String group_by; // 可选变量: [year, month, day, hour, minute, fid, eid, name, rlist, (extlist.var), ugroup, uid, exttype, type, klist, cfg]
 }
