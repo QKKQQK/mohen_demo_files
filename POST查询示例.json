@@ -1,47 +1,47 @@
-{
-	// 用于判定搜索类别的元数据
-    "metadata" : {
-        "query_count" : 3,
-        "coefficient" : {
-            // 例子： 多个Query合并
-            // "set_a"，用来区分不同的组合和标注数据csv文件  
-            "set_a" : {
-                "5xtw0001" : 0.7,
-                "5xtw0002" : 0.3,
-                "5xtw0003" : 0.7
-            },
-            // 例子： 只有1个Query
-            "set_b" : {
-                "5xtw0003" : 1.0
-            },
-            // 一次POST可以有多个组合
-            "set_c" : {
-                "5xtw0001" : 0.3,
-                "5xtw0003" : 0.7
-            }
-        }
-    },
-    // 序列后的class Search数据
-    "data" : [
-        {
-        	// “query_id”，用来区分query和标注数据csv文件
-            "query_id" : "5xtw0001",
-            // 序列化的class Search
-            "data" : {
-                "序列化的Query 1"
+    {
+        // 用于判定搜索类别的元数据
+        "metadata" : {
+            "query_count" : 3,
+            "coefficient" : {
+                // 例子： 多个Query合并
+                // "set_a"，用来区分不同的组合和标注数据csv文件  
+                "set_a" : {
+                    "5xtw0001" : 0.7,
+                    "5xtw0002" : 0.3,
+                    "5xtw0003" : 0.7
+                },
+                // 例子： 只有1个Query
+                "set_b" : {
+                    "5xtw0003" : 1.0
+                },
+                // 一次POST可以有多个组合
+                "set_c" : {
+                    "5xtw0001" : 0.3,
+                    "5xtw0003" : 0.7
+                }
             }
         },
-        {
-            "query_id" : "5xtw0002",
-            "data" : {
-                "序列化的Query 2"
+        // 序列后的class Search数据
+        "data" : [
+            {
+                // “query_id”，用来区分query和标注数据csv文件
+                "query_id" : "5xtw0001",
+                // 序列化的class Search
+                "data" : {
+                    "序列化的Query 1"
+                }
+            },
+            {
+                "query_id" : "5xtw0002",
+                "data" : {
+                    "序列化的Query 2"
+                }
+            },
+            {
+                "query_id" : "5xtw0003",
+                "data" : {
+                    "序列化的Query 3"
+                }
             }
-        },
-        {
-            "query_id" : "5xtw0003",
-            "data" : {
-                "序列化的Query 3"
-            }
-        }
-    ]
-}
+        ]
+    }

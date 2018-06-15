@@ -144,7 +144,7 @@ def tbl_report_raw_separate_date_random_data():
 	  "rlist" : [random_object_id_from_randint(100) for _ in range(random.randint(0,7))],
 	  "extlist" : [random_object_id_from_randint(10000) for _ in range(random.randint(0,10))],
 	  "uid" : random_object_id_from_datetime(),
-	  "uyear" : random.randint(2000, 2018),
+	  "ugroup" : random.randint(2000, 2018),
 	  "date_y" : random.randint(2010, 2018),
 	  "date_m" : random.randint(1, 12),
 	  "date_d" : random.randint(1, 28),

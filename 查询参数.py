@@ -18,8 +18,7 @@
 	"v2" : [match, range],
 	"v3" : {key: [match, range]}
 	"cfg" : [],
-	"utc_date" : [match, range],
-	"utc_ts" : [match, range]
+	"utc_date" : [match, range]
 }
 
 
